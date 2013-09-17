@@ -7,8 +7,8 @@
 'use strict';
 
 var shifter = require('shifter'),
-    description = require('package.json').description,
-    runctx = require('./run-context'),
+    description = require('./package').description,
+    runctx = require('./lib/run-context'),
 
     META_MOD_PREFIX = 'loader-',
 
@@ -45,27 +45,35 @@ function YuiBuildPlugin(config) {
 yp = YuiBuildPlugin.prototype;
 
 yp.bundleUpdated = function (evt, api) {
-    var buildlist = buildThese(evt.bundle.name, evt.files, this.describe.filter);
+    var buildlist = this.buildThese(evt.bundle.name, evt.files, this.describe.filter);
 
 };
 
 yp.buildThese = function (bundleName, filelist, usrfilter) {
     var metaname = META_MOD_PREFIX + bundleName + '.js',
-        buildlist = [];
+        modules = {};
 
     function filter(file) {
-        return file
-            && file.slice(-3) !== '.js'
-            && file.slice(-metaname.length) !== metaname
-            && (usrFilter && usrFilter(file));
+        return file &&
+            file.slice(-3) === '.js' &&
+            file.slice(-metaname.length) !== metaname &&
+            (!usrfilter || usrfilter(file));
     }
 
-    filelist.filter(filter).forEach(function (file) {
-        var mod = runctx.checkYUIModule(file);
-        if (mod) {
-            this.parsed[file] = mod;
+    filelist.forEach(function (file) {
+        var mod;
+
+        if (filter(file)) {
+            console.log('checking..', file);
+            mod = runctx.checkYUIModule(file);
+            if (mod) {
+                modules[file] = mod;
+            }
         }
+
     });
+
+    return modules;
 };
 
 
