@@ -1,0 +1,4 @@
+/artifacts
+/tests/artifacts
+node_modules
+build

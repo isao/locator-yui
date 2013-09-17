@@ -1,0 +1,25 @@
+{
+  "name": "locator-yui",
+  "version": "0.0.0",
+  "description": "Locator-plugin",
+  "main": "plugin.js",
+  "dependencies": {
+    "hashsome": "~0.1.0",
+    "shifter": "*"
+  },
+  "peerDependencies": {
+    "yui": "~3.11"
+  },
+  "devDependencies": {
+    "yui": "~3.11",
+    "yuitest": "0.7.x"
+  },
+  "scripts": {
+    "test": "echo 'none yet' && exit 1"
+  },
+  "contributors": [
+    "Caridy Patino <caridy@yahoo-inc.com> (http://github.com/caridy)",
+    "Isao Yagi <isao@yahoo-inc.com>"
+  ],
+  "license": "BSD"
+}
