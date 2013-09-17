@@ -12,10 +12,12 @@
   },
   "devDependencies": {
     "yui": "~3.11",
-    "yuitest": "0.7.x"
+    "ytestrunner": "~0.3.3",
+    "yuitest": "~0.7.9"
   },
   "scripts": {
-    "test": "echo 'none yet' && exit 1"
+    "test": "ytestrunner --exclude 'tests/fixtures/**/*.js' -c",
+    "unit": "ytestrunner --exclude 'tests/fixtures/**/*.js'"
   },
   "contributors": [
     "Caridy Patino <caridy@yahoo-inc.com> (http://github.com/caridy)",

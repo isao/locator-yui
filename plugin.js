@@ -9,6 +9,9 @@
 var shifter = require('shifter'),
     description = require('package.json').description,
     runctx = require('./run-context'),
+
+    META_MOD_PREFIX = 'loader-',
+
     yp; // shortcut for YuiBuildPlugin.prototype
 
 
@@ -25,7 +28,7 @@ function YuiBuildPlugin(config) {
 
     // map of pathname -> javascript require'd
     this.parsed = {};
-    
+
     // map of module name -> pathname
     this.modules = {};
 
@@ -42,17 +45,25 @@ function YuiBuildPlugin(config) {
 yp = YuiBuildPlugin.prototype;
 
 yp.bundleUpdated = function (evt, api) {
-    var buildlist = buildThese(evt.files, this.describe.filter);
-    
+    var buildlist = buildThese(evt.bundle.name, evt.files, this.describe.filter);
+
 };
 
-yp.buildThese = function (filelist, filter) {
-    var buildlist = [];
+yp.buildThese = function (bundleName, filelist, usrfilter) {
+    var metaname = META_MOD_PREFIX + bundleName + '.js',
+        buildlist = [];
 
-    filelist.forEach(function (file) {
-        var mod;
-        if (!filter || filter(file)) {
-            mod = runctx.checkYUIModule(file);
+    function filter(file) {
+        return file
+            && file.slice(-3) !== '.js'
+            && file.slice(-metaname.length) !== metaname
+            && (usrFilter && usrFilter(file));
+    }
+
+    filelist.filter(filter).forEach(function (file) {
+        var mod = runctx.checkYUIModule(file);
+        if (mod) {
+            this.parsed[file] = mod;
         }
     });
 };
